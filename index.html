@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мандрівка цифровим світом</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marmelad&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2b2a4c;
+    --paper: #fffaf0;
+    --sky: #bfe6ff;
+    --sun: #ffd84d;
+    --muted: #5e5c80;
+    --radius: 26px;
+    --learn: #3d8bfd;  --learn-soft: #e3efff;
+    --code:  #8b5cf6;  --code-soft:  #efe7ff;
+    --travel:#16a37f;  --travel-soft:#ddf6ee;
+    --draw:  #f0577d;  --draw-soft:  #ffe4ec;
+    --read:  #f08a24;  --read-soft:  #ffecd6;
+    --lang:  #0f9bb5;  --lang-soft:  #d9f3f8;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Nunito", "Trebuchet MS", "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  h1, h2, h3 { font-family: "Marmelad", "Trebuchet MS", "Segoe UI", sans-serif; font-weight: 400; margin: 0; }
+
+  /* ---------- Шапка ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 40px 20px 90px;
+    text-align: center;
+    background: linear-gradient(180deg, var(--sky) 0%, #e8f6ff 100%);
+  }
+  .hero::after {            /* трав'яний пагорб знизу */
+    content: "";
+    position: absolute; left: -10%; right: -10%; bottom: -70px; height: 130px;
+    background: #8fdc8a;
+    border-radius: 50% 50% 0 0;
+  }
+  .cloud {
+    position: absolute; width: 110px; height: 36px; background: #fff; border-radius: 40px; opacity: .9;
+  }
+  .cloud::before, .cloud::after { content: ""; position: absolute; background: #fff; border-radius: 50%; }
+  .cloud::before { width: 50px; height: 50px; left: 18px; top: -24px; }
+  .cloud::after  { width: 36px; height: 36px; left: 56px; top: -14px; }
+  .cloud.c1 { top: 28px; left: 6%; }
+  .cloud.c2 { top: 90px; right: 8%; transform: scale(.8); }
+  .rocket {
+    display: inline-block;
+    font-size: 72px;
+    line-height: 1;
+    animation: takeoff 1.4s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @keyframes takeoff { from { transform: translateY(80px) rotate(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
+  .hero h1 { font-size: clamp(32px, 7vw, 56px); margin-top: 6px; position: relative; z-index: 1; }
+  .hero p { max-width: 520px; margin: 10px auto 0; font-size: 20px; position: relative; z-index: 1; }
+
+  /* ---------- Прогрес ---------- */
+  .progress {
+    position: relative; z-index: 2;
+    max-width: 760px; margin: -40px auto 0; padding: 16px 20px;
+    background: #fff; border: 4px solid var(--sun); border-radius: var(--radius);
+    box-shadow: 0 6px 0 #e6b800;
+    text-align: center;
+  }
+  .progress strong { font-family: "Marmelad", sans-serif; font-weight: 400; font-size: 22px; }
+  .stars { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; margin-top: 6px; font-size: 22px; }
+  .stars span { filter: grayscale(1); opacity: .35; transition: transform .25s, opacity .25s; }
+  .stars span.on { filter: none; opacity: 1; transform: scale(1.15); }
+
+  /* ---------- Фільтри ---------- */
+  .filters {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    max-width: 960px; margin: 30px auto 10px; padding: 0 16px;
+  }
+  .chip {
+    font: inherit; font-weight: 800; font-size: 17px;
+    padding: 10px 18px; border-radius: 999px;
+    border: 3px solid var(--c, var(--ink)); background: #fff; color: var(--ink);
+    cursor: pointer; min-height: 48px;
+  }
+  .chip[aria-pressed="true"] { background: var(--c, var(--ink)); color: #fff; }
+  .chip:hover { transform: translateY(-2px); }
+
+  /* ---------- Картки ---------- */
+  main { max-width: 1120px; margin: 0 auto; padding: 10px 16px 50px; }
+  .grid {
+    display: grid; gap: 22px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  }
+  .card {
+    position: relative;
+    display: flex; flex-direction: column;
+    padding: 22px 20px 20px;
+    background: var(--soft);
+    border: 4px solid var(--c);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 0 var(--c);
+  }
+  .card.done { background: #fff; }
+  .num {
+    position: absolute; top: -16px; left: 16px;
+    min-width: 40px; height: 40px; padding: 0 10px;
+    display: grid; place-items: center;
+    background: var(--c); color: #fff; border-radius: 20px;
+    font-family: "Marmelad", sans-serif; font-size: 20px;
+  }
+  .emoji {
+    width: 76px; height: 76px; display: grid; place-items: center;
+    font-size: 44px; background: #fff; border-radius: 50%;
+    border: 3px solid var(--c); margin-bottom: 10px;
+  }
+  .card h3 { font-size: 24px; line-height: 1.2; }
+  .tag {
+    align-self: flex-start; margin: 8px 0 6px;
+    padding: 2px 12px; border-radius: 999px;
+    background: var(--c); color: #fff; font-size: 15px; font-weight: 800;
+  }
+  .card p { margin: 4px 0 0; }
+  .task {
+    margin-top: 12px !important; padding: 10px 14px;
+    background: #fff; border-radius: 16px; border: 2px dashed var(--c);
+  }
+  .task b { color: var(--c); }
+  .badge-en { font-size: 15px; color: var(--muted); margin-top: 8px !important; }
+  .actions { margin-top: auto; padding-top: 16px; display: grid; gap: 10px; }
+  .go {
+    display: block; text-align: center; text-decoration: none;
+    font-family: "Marmelad", sans-serif; font-size: 22px;
+    padding: 12px 16px; border-radius: 18px;
+    background: var(--c); color: #fff;
+    box-shadow: 0 5px 0 rgba(0,0,0,.25);
+    min-height: 52px;
+  }
+  .go:hover { transform: translateY(-2px); box-shadow: 0 7px 0 rgba(0,0,0,.25); }
+  .go:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.25); }
+  .check {
+    font: inherit; font-weight: 800; font-size: 17px;
+    padding: 10px 12px; border-radius: 16px; cursor: pointer; min-height: 48px;
+    background: #fff; color: var(--ink); border: 3px solid var(--c);
+  }
+  .check[aria-pressed="true"] { background: var(--sun); border-color: #e6b800; }
+
+  .go:focus-visible, .chip:focus-visible, .check:focus-visible, .reset:focus-visible {
+    outline: 4px solid var(--ink); outline-offset: 3px;
+  }
+
+  footer { text-align: center; padding: 0 16px 40px; color: var(--muted); }
+  .reset {
+    font: inherit; font-weight: 800; background: none; border: 0; color: var(--muted);
+    text-decoration: underline; cursor: pointer; padding: 10px;
+  }
+
+  .cat-learn  { --c: var(--learn);  --soft: var(--learn-soft); }
+  .cat-code   { --c: var(--code);   --soft: var(--code-soft); }
+  .cat-travel { --c: var(--travel); --soft: var(--travel-soft); }
+  .cat-draw   { --c: var(--draw);   --soft: var(--draw-soft); }
+  .cat-read   { --c: var(--read);   --soft: var(--read-soft); }
+  .cat-lang   { --c: var(--lang);   --soft: var(--lang-soft); }
+
+  @media (max-width: 520px) {
+    body { font-size: 17px; }
+    .rocket { font-size: 58px; }
+    .cloud.c2 { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="rocket" aria-hidden="true">🚀</div>
+  <h1>Мандрівка цифровим світом</h1>
+  <p>Обирай сайт, натискай велику кнопку й вирушай у подорож! За кожне виконане завдання отримуй зірочку ⭐</p>
+</header>
+
+<section class="progress" aria-live="polite">
+  <strong id="score">Зірочок: 0 з 20</strong>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+</section>
+
+<nav class="filters" id="filters" aria-label="Фільтр за темою"></nav>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <p>Користуйся сайтами разом з учителем або дорослими 💙</p>
+  <button class="reset" id="reset" type="button">Почати спочатку (зняти всі зірочки)</button>
+</footer>
+
+<script>
+  var CATS = {
+    learn:  { name: "Вчимося",             emoji: "📚" },
+    code:   { name: "Кодуємо і створюємо", emoji: "💻" },
+    travel: { name: "Мандруємо",           emoji: "🌍" },
+    draw:   { name: "Малюємо",             emoji: "🎨" },
+    read:   { name: "Читаємо",             emoji: "📖" },
+    lang:   { name: "Слова й мови",        emoji: "🔤" }
+  };
+
+  var ITEMS = [
+    { n: 1,  cat: "learn",  emoji: "🏫", name: "Всеукраїнська школа онлайн",
+      desc: "Цікаві уроки й відео з різних предметів. Знайди урок, який тобі подобається.",
+      url: "https://lms.e-school.net.ua/" },
+    { n: 2,  cat: "learn",  emoji: "🧊", name: "Mozaik Education",
+      desc: "Розумні книжки з 3D-моделями. Можна крутити їх і розглядати з усіх боків.",
+      url: "https://www.mozaweb.com/uk/" },
+    { n: 3,  cat: "code",   emoji: "🧩", name: "Студія коду",
+      desc: "Складай програму з кольорових блоків і допомагай героям грати й рухатися.",
+      url: "https://studio.code.org" },
+    { n: 4,  cat: "code",   emoji: "🤖", name: "Code for Life",
+      desc: "Веди маленького фургончика дорогою за допомогою команд-блоків.",
+      url: "https://www.codeforlife.education/" },
+    { n: 5,  cat: "code",   emoji: "🐟", name: "Blockly",
+      desc: "Ігри з кодом: головоломки, лабіринт, рибки й навіть птахи!",
+      url: "https://blockly.games/" },
+    { n: 6,  cat: "code",   emoji: "⏰", name: "Година коду",
+      desc: "Велика добірка ігор, де ти вчишся керувати комп’ютером. Обирай будь-яку!",
+      url: "https://hourofcode.com/ua/learn" },
+    { n: 7,  cat: "code",   emoji: "🏠", name: "Створення 3D-моделей",
+      desc: "Збудуй власну фігуру з кубиків, циліндрів і кульок. Це як віртуальний конструктор.",
+      task: "Спробуй створити 3D-модель.",
+      url: "https://www.tinkercad.com/" },
+    { n: 8,  cat: "travel", emoji: "🗺️", name: "Google Карти — вулиці",
+      desc: "Гуляй вулицями міст, не виходячи з класу. Переміщуйся стрілочками.",
+      task: "Переглянь кілька вулиць.",
+      url: "https://www.google.com/maps/" },
+    { n: 9,  cat: "travel", emoji: "🏡", name: "Музей під відкритим небом",
+      desc: "Старовинні українські хати, вітряки та садиби. Дізнайся, як жили люди раніше.",
+      url: "https://authenticukraine.com.ua/open-air-museums" },
+    { n: 10, cat: "travel", emoji: "🔭", name: "Розмір Всесвіту",
+      desc: "Рухай повзунок і порівнюй розміри: від найменших частинок до величезних зір.",
+      task: "Обери кілька об’єктів і прочитай про них.",
+      url: "https://htwins.net/scale2/" },
+    { n: 11, cat: "learn",  emoji: "⌨️", name: "Клавіатурний тренажер",
+      desc: "Навчися швидко друкувати. Кожен урок — маленька гра з літерами.",
+      task: "Обери урок і пройди його.",
+      url: "https://www.ratatype.com/" },
+    { n: 12, cat: "travel", emoji: "🪟", name: "WindowSwap",
+      desc: "Подивись у чуже вікно: що видно в іншій країні? Може, море чи гори?",
+      task: "Переглянь кілька вікон з усього світу.",
+      url: "https://www.windowswap.com/", en: true },
+    { n: 13, cat: "draw",   emoji: "🏖️", name: "Малювання піском",
+      desc: "Малюй пальцем або мишкою, наче по справжньому піску.",
+      task: "Малюй кілька хвилин.",
+      url: "https://thisissand.com/", en: true },
+    { n: 14, cat: "draw",   emoji: "🌌", name: "Малювання туманності",
+      desc: "Твій малюнок світиться, як космічний вогонь.",
+      task: "Малюй кілька хвилин.",
+      url: "https://29a.ch/sandbox/2011/neonflames/" },
+    { n: 15, cat: "draw",   emoji: "✨", name: "Малювання світлом",
+      desc: "Проводь лінію — і вона перетворюється на гарний симетричний візерунок.",
+      task: "Малюй кілька хвилин.",
+      url: "http://weavesilk.com/", en: true },
+    { n: 16, cat: "draw",   emoji: "✏️", name: "Швидко малюй!",
+      desc: "Комп’ютер дає слово, а ти швидко малюєш. Чи вгадає він, що це?",
+      task: "Малюй кілька хвилин.",
+      url: "https://quickdraw.withgoogle.com/", en: true },
+    { n: 17, cat: "read",   emoji: "📜", name: "Бібліотека УкрЛіб",
+      desc: "Українські казки, вірші й оповідання. Обери та прочитай щось цікаве.",
+      url: "https://www.ukrlib.com.ua/" },
+    { n: 18, cat: "read",   emoji: "🦉", name: "Національна бібліотека для дітей",
+      desc: "Бібліотека, зроблена саме для дітей. Тут багато книжок і цікавих розділів.",
+      url: "https://chl.kiev.ua/" },
+    { n: 19, cat: "lang",   emoji: "🦜", name: "Duolingo",
+      desc: "Вивчай іноземну мову граючись: слухай, вибирай картинки й збирай зірочки.",
+      task: "Пройди кілька уроків.",
+      url: "https://www.duolingo.com/learn", en: true },
+    { n: 20, cat: "lang",   emoji: "💬", name: "Vocabulary.com",
+      desc: "Словник, який пояснює значення слів. Спробуй знайти кілька слів.",
+      task: "Знайди тлумачення кількох слів.",
+      url: "https://www.vocabulary.com/", en: true }
+  ];
+
+  var STORE_KEY = "digital-trip-done-v1";
+  var done = {};
+  var filter = "all";
+
+  function loadDone() {
+    try { done = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { done = {}; }
+  }
+  function saveDone() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(done)); } catch (e) { /* ігноруємо */ }
+  }
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+
+  function renderFilters() {
+    var box = document.getElementById("filters");
+    box.innerHTML = "";
+    var all = [["all", "🌈 Усі"]].concat(Object.keys(CATS).map(function (k) {
+      return [k, CATS[k].emoji + " " + CATS[k].name];
+    }));
+    all.forEach(function (pair) {
+      var b = el("button", "chip cat-" + pair[0], pair[1]);
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(filter === pair[0]));
+      b.addEventListener("click", function () { filter = pair[0]; renderFilters(); renderCards(); });
+      box.appendChild(b);
+    });
+  }
+
+  function renderCards() {
+    var grid = document.getElementById("grid");
+    grid.innerHTML = "";
+    ITEMS.forEach(function (it) {
+      if (filter !== "all" && it.cat !== filter) return;
+      var card = el("article", "card cat-" + it.cat + (done[it.n] ? " done" : ""));
+      card.appendChild(el("div", "num", "№ " + it.n));
+      card.appendChild(el("div", "emoji", it.emoji));
+      card.appendChild(el("h3", "", it.name));
+      card.appendChild(el("span", "tag", CATS[it.cat].name));
+      card.appendChild(el("p", "", it.desc));
+      if (it.task) {
+        var t = el("p", "task");
+        var b = el("b", "", "Завдання: ");
+        t.appendChild(b);
+        t.appendChild(document.createTextNode(it.task));
+        card.appendChild(t);
+      }
+      if (it.en) card.appendChild(el("p", "badge-en", "🇬🇧 Сайт англійською — попроси допомогу вчителя"));
+
+      var actions = el("div", "actions");
+      var go = el("a", "go", "Відкрити сайт 🚀");
+      go.href = it.url;
+      go.target = "_blank";
+      go.rel = "noopener noreferrer";
+      go.setAttribute("aria-label", "Відкрити сайт: " + it.name);
+      actions.appendChild(go);
+
+      var ck = el("button", "check", done[it.n] ? "⭐ Я це зробив(ла)!" : "☆ Позначити зірочкою");
+      ck.type = "button";
+      ck.setAttribute("aria-pressed", String(!!done[it.n]));
+      ck.addEventListener("click", function () {
+        if (done[it.n]) delete done[it.n]; else done[it.n] = true;
+        saveDone(); renderCards(); renderProgress();
+      });
+      actions.appendChild(ck);
+      card.appendChild(actions);
+      grid.appendChild(card);
+    });
+  }
+
+  function renderProgress() {
+    var count = Object.keys(done).length;
+    var total = ITEMS.length;
+    var msg = "Зірочок: " + count + " з " + total;
+    if (count === total) msg = "🎉 Вітаю! Усі " + total + " зірочок зібрано!";
+    document.getElementById("score").textContent = msg;
+    var stars = document.getElementById("stars");
+    stars.innerHTML = "";
+    ITEMS.forEach(function (it, i) {
+      var s = el("span", i < count ? "on" : "", "⭐");
+      stars.appendChild(s);
+    });
+  }
+
+  document.getElementById("reset").addEventListener("click", function () {
+    if (Object.keys(done).length === 0) return;
+    if (confirm("Зняти всі зірочки й почати спочатку?")) {
+      done = {}; saveDone(); renderCards(); renderProgress();
+    }
+  });
+
+  loadDone();
+  renderFilters();
+  renderCards();
+  renderProgress();
+</script>
+</body>
+</html>
